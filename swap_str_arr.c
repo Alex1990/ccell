@@ -1,3 +1,7 @@
+/**
+ * Swap two char arrays
+ */
+
 #include <stdio.h>
 #include <string.h>
 
@@ -48,7 +52,8 @@ swap_str_arr(char *str_a, char *str_b)
     }
     str_b[min_len] = '\0';
     str_a[max_len] = '\0';
-  } else {
+  }
+  else {
     for (i = min_len; i < max_len; i++) {
       str_b[i] = str_a[i];
     }

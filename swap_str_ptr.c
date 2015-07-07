@@ -1,3 +1,6 @@
+/**
+ * Swap two char pointers
+ */
 #include <stdio.h>
 #include <string.h>
 
