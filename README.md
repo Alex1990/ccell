@@ -1,2 +1,2 @@
 # ccell
-Some c utility function
+Some c utility functions.
