@@ -16,7 +16,8 @@ reverse_char_array(char *str);
 char *
 reverse_string(char *dest, const char *src);
 
-int main()
+int
+main()
 {
   char *s1 = "hello, world!";
   char s2[] = "foo bar";
