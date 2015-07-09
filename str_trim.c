@@ -2,10 +2,11 @@
  * Remove whitespace in a string
  *
  * Whitespace: "\t\n\v\f\r ", equivalent to isspace()
+ * More:
+ *  - https://en.wikipedia.org/wiki/Trimming_(computer_programming)#C.2FC.2B.2B
  */
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,39 +15,67 @@
 #define log printf
 
 char *
+str_ltrim(char *dest, const char *src)
+{
+  size_t n = 0;
+
+  while (src[n] != '\0' && isspace((unsigned char)src[n])) {
+    ++n;
+  }
+
+  while (src[n] != '\0') {
+    *dest = src[n];
+    ++dest;
+    ++n;
+  }
+  *dest = '\0';
+
+  return dest;
+}
+
+char *
+str_rtrim(char *dest, const char *src)
+{
+  size_t i;
+  size_t n = strlen(src);
+
+  while (n > 0 && isspace((unsigned char)src[n - 1])) {
+    n--;
+  }
+
+  for (i = 0; i < n; i++) {
+    *dest = src[i];
+    ++dest;
+  }
+  *dest = '\0';
+
+  return dest;
+}
+  
+char *
 str_trim(char *dest, const char *src)
 {
   if (src == NULL) return dest;
 
-  char ch;
-  bool is_left_space = true;
-  size_t len;
-  size_t space_count = 0;
+  size_t i;
+  size_t start;
+  size_t end;
   
-  while ((ch = *src) != '\0') {
-    if (is_left_space) {
-      if (!isspace(ch)) {
-        is_left_space = false;
-        *dest = ch;
-        ++dest;
-      } else {
-        ++space_count;
-      }
-    } else {
-      *dest = ch;
-      ++dest;
-    }
-    ++src;
+  start = 0;
+  while (src[start] != '\0' && isspace((unsigned char)src[start])) {
+    ++start;
   }
 
-  len = strlen(src) - space_count;
-
-  while (len--) {
-    if (!isspace(dest[len])) {
-      dest[len + 1] = '\0';
-      break;
-    }
+  end = strlen(src);
+  while (end > 0 && isspace((unsigned char)src[end - 1])) {
+    --end;
   }
+
+  for (i = start; i < end; i++) {
+    *dest = src[i];
+    ++dest;
+  }
+  *dest = '\0';
 
   return dest;
 }
@@ -54,6 +83,7 @@ str_trim(char *dest, const char *src)
 int
 main()
 {
+  int type = 0; // 0: trim, 1: ltrim, 2: rtrim
   char *src1 = "\t\n\f\v\r hello world\t\n\f\v\r ";
   char src2[] = "\t\n\f\v\r hello world\t\n\f\v\r ";
   char *src3 = "";
@@ -69,6 +99,8 @@ main()
   assert(dest2 != NULL);
   assert(dest3 != NULL);
 
+  /* Print the values before trim */
+
   log("Before trim\n");
   log("===========\n");
 
@@ -76,9 +108,37 @@ main()
   log("src2: %s\n", src2);
   log("src3: %s\n", src3);
 
-  str_trim(dest1, src1);
-  str_trim(dest2, src2);
-  str_trim(dest3, src3);
+  /* Select trim type */
+
+  log("Select trim type and press \"Enter\" to confirm:\n");
+  log("=========\n");
+  log("0 - trim\n");
+  log("1 - ltrim\n");
+  log("2 - rtrim\n");
+  log("\n");
+
+  scanf("%d", &type);
+
+  /* Trim */
+
+  switch (type) {
+    case 1:
+      str_ltrim(dest1, src1);
+      str_ltrim(dest2, src2);
+      str_ltrim(dest3, src3);
+      break;
+    case 2:
+      str_rtrim(dest1, src1);
+      str_rtrim(dest2, src2);
+      str_rtrim(dest3, src3);
+      break;
+    default:
+      str_trim(dest1, src1);
+      str_trim(dest2, src2);
+      str_trim(dest3, src3);
+  }
+
+  /* Print the values after trim */
 
   log("\nAfter trim\n");
   log("============\n");
